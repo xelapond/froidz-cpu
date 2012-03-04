@@ -1,4 +1,18 @@
 #BlueJ class context
 comment0.params=line
 comment0.target=WPChunk(java.lang.String)
-numComments=1
+comment1.params=opCode
+comment1.target=boolean\ match(java.lang.String)
+comment1.text=\n\ Takes\ an\ opCode\ including\ data\ directly\ from\ an\ assembled\ program,\ and\ determines\ if\ it\ matches\ this\ operation\n\ @param\ opCode\ The\ opCode\ including\ data\n\ @return\ true\ ->\ It\ matched\n
+comment2.params=opCode
+comment2.target=java.lang.String\ formatRegex(java.lang.String)
+comment2.text=\n\ Takes\ an\ opcode\ and\ replaces\ all\ ascii\ characters\ with\ .\ to\ match\ a\ single\ character\n\ @param\ opCode\ An\ opCode\ String\n\ @return\ A\ string\ representing\ a\ regex\ to\ match\ only\ the\ static\ parts\ of\ the\ opcode\n
+comment3.params=
+comment3.target=java.lang.String\ getOpName()
+comment4.params=
+comment4.target=java.lang.String[]\ getOperands()
+comment5.params=
+comment5.target=java.lang.String[]\ getRanges()
+comment6.params=
+comment6.target=java.lang.String\ getOpCode()
+numComments=7
