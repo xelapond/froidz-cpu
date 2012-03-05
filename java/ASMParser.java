@@ -86,14 +86,17 @@ public class ASMParser
             
     }
     
-    private List<String> generateCheckSums
+    private List<String> generateCheckSums()
+    {
+        return null;
+    }
     
     
     /**
      * Add the preceding colons to every line of Intel Hex
      * @param 
      */
-    private List<String> finalize(List<String lines)
+    private List<String> finalize(List<String> lines)
     {
         List l = new ArrayList();
         

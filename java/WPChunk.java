@@ -78,7 +78,19 @@ public class WPChunk
             return null;
         }
         
-        return "";
+        String instruction = this.opCode;
+        for (int op = 0; op < operands.length; op++)
+        {
+            String operand = this.operands[op];
+            String asmInput = asm.get(op + 1);
+            int offset = operand.indexOf("=") + 1;
+            for (int i = 0; i < operand.length() - offset; i++)
+            {
+                instruction = instruction.replaceAll(operand.charAt(i + offset) + "", asmInput.charAt(i) + "");
+            }
+        }
+        
+        return instruction;
     }
     
     public String numberToBinary(String num)
