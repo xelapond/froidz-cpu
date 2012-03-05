@@ -23,10 +23,12 @@ public class ASMParser
     
     public ASMParser(String path)
     {
+        LinkedList<String> lines = new LinkedList();
+        
         try
         {
             Scanner scanner = new Scanner(new File(path));
-            LinkedList<String> lines = new LinkedList();
+
             while (scanner.hasNextLine())
             {
                 lines.add(scanner.nextLine());
@@ -42,6 +44,7 @@ public class ASMParser
         }
         
         this.parser = new WPParser();
+        this.assemble(this.generateInstructions(this.format(lines)));
     }
     
     //TODO: Remove comments
@@ -67,19 +70,41 @@ public class ASMParser
         return lines;
     }
     
-    private List<String> assemble(List<String> lines)
+    private List<String> generateInstructions(List<String> lines)
     {
+        ArrayList<String> instructions = new ArrayList();
+        
         for (String line : lines)
         {
-            List parsed = this.parseLine(line);
+            List<String> parsed = this.parseLine(line);
             
-            WPChunk op = null;
+            WPChunk op = this.parser.getChunk(parsed.get(0));
+            instructions.add(op.generateInstruction(parsed));
         }
         
-        return null;
+        return instructions;
             
     }
     
+    private List<String> generateCheckSums
+    
+    
+    /**
+     * Add the preceding colons to every line of Intel Hex
+     * @param 
+     */
+    private List<String> finalize(List<String lines)
+    {
+        List l = new ArrayList();
+        
+        for (String line : lines)
+        {
+            l.add(":" + line);
+        }
+        
+        return l;
+    }
+        
     public static List<String> parseLine(String line)
     {
         List<String> parsed = new ArrayList();
