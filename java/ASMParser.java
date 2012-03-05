@@ -44,7 +44,7 @@ public class ASMParser
         }
         
         this.parser = new WPParser();
-        this.assemble(this.generateInstructions(this.format(lines)));
+        //this.assemble(this.generateInstructions(this.format(lines)));
     }
     
     //TODO: Remove comments
@@ -86,14 +86,28 @@ public class ASMParser
             
     }
     
-    private List<String> generateCheckSums
+    private List<String> generateByteCountsAndAddresses(List<String> lines)
+    {
+        List<String> l = new ArrayList();
+        
+        for (String line : lines)
+        {
+        }
+        
+        return null;
+    }
+    
+    private List<String> generateCheckSums(List<String> lines)
+    {
+        return lines;
+    }
     
     
     /**
      * Add the preceding colons to every line of Intel Hex
      * @param 
      */
-    private List<String> finalize(List<String lines)
+    private List<String> finalize(List<String> lines)
     {
         List l = new ArrayList();
         
