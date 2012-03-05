@@ -44,7 +44,7 @@ public class ASMParser
         }
         
         this.parser = new WPParser();
-        //this.assemble(this.generateInstructions(this.format(lines)));
+        this.generateInstructions(this.preprocess(this.format(lines)));
     }
     
     //TODO: Remove comments

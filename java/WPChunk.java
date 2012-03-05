@@ -72,6 +72,12 @@ public class WPChunk
      */
     public String generateInstruction(List<String> asm)
     {
+        for (String s : asm)
+        {
+            System.out.print(s + " ");
+        }
+        System.out.println();
+        
         if (!asm.get(0).equals(this.opName) || asm.size() - 1 != operands.length)
         {
             System.out.println("invalid input");
