@@ -122,6 +122,10 @@ public class WPChunk
         }
         else
         {
+            if (num.charAt(0).equalsIgnoreCase('r'))
+            {
+                num = num.substring(1);
+            }
             return Integer.toBinaryString(Integer.parseInt(num));
         }
     }
