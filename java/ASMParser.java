@@ -3,6 +3,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;  
+
 /**
  * Write a description of class ASMParser here.
  * 
@@ -11,6 +14,8 @@ import java.io.File;
  */
 public class ASMParser
 {
+    private WPParser parser;
+
     public ASMParser()
     {
         this("../test.asm");
@@ -18,17 +23,78 @@ public class ASMParser
     
     public ASMParser(String path)
     {
-        Scanner scanner = new Scanner(new File(path));
-        Iterator iterator = scanner.iterator();
-        LinkedList<String> lines = new LinkedList();
-        while (iterator.hasNext())
+        try
         {
-            lines.add(iterator.next());
+            Scanner scanner = new Scanner(new File(path));
+            LinkedList<String> lines = new LinkedList();
+            while (scanner.hasNextLine())
+            {
+                lines.add(scanner.nextLine());
+            }
+            for (String s : this.format(lines))
+            {
+                System.out.println(s);
+            }
         }
-        this.format(lines);
+        catch (Throwable e)
+        {
+            System.out.println("404 File Not Found");
+        }
+        
+        this.parser = new WPParser();
     }
     
-    private List<String> format(List<String>)
+    //TODO: Remove comments
+    private List<String> format(List<String> lines)
     {
+        Iterator<String> i = lines.iterator();
+        String line;
+        
+        while (i.hasNext())
+        {
+            line = i.next().trim();
+            if (line.length() == 0)
+            {
+                i.remove();
+            }
+        }
+        
+        return lines;
     }
+    
+    private List<String> preprocess(List<String> lines)
+    {
+        return lines;
+    }
+    
+    private List<String> assemble(List<String> lines)
+    {
+        for (String line : lines)
+        {
+            List parsed = this.parseLine(line);
+            
+            WPChunk op = null;
+        }
+        
+        return null;
+            
+    }
+    
+    public static List<String> parseLine(String line)
+    {
+        List<String> parsed = new ArrayList();
+        
+        for (String s : line.replace(",", " ").split(" "))
+        {
+            if (s.length() != 0)
+            {
+                parsed.add(s);
+            }
+        }
+       
+        return parsed;
+
+    }
+    
+
 }
