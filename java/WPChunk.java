@@ -78,6 +78,11 @@ public class WPChunk
             return null;
         }
         
+        for (int i = 1; i < asm.size(); i++)
+        {
+            asm.set(i, numberToBinary(asm.get(i)));
+        }
+        
         String instruction = this.opCode;
         for (int op = 0; op < operands.length; op++)
         {
