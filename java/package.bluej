@@ -10,8 +10,13 @@ dependency3.to=WPChunk
 dependency3.type=UsesDependency
 package.editor.height=400
 package.editor.width=560
+<<<<<<< HEAD
 package.editor.x=19
 package.editor.y=41
+=======
+package.editor.x=307
+package.editor.y=59
+>>>>>>> de4ed0a0f015ae9fb45db2dccbfd6cc90133d96b
 package.numDependencies=3
 package.numTargets=5
 package.showExtends=true
