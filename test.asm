@@ -1,18 +1,6 @@
-.DEVICE ATmega64
+ldi R16,0xFF
+out 0x07,R16
+ldi R16,0x00
+out 0x08,R16
 
-.def reg = R16
-.def reg2 = R31
-
-; Init Stackpointer
-ldi reg, LOW(RAMEND)
-out SPL, reg
-ldi reg, HIGH(RAMEND)
-out SPH, reg
-
-ldi reg,0xFF
-
-out DDRC,reg
-ldi reg2,0xFA
-out PORTC,reg
-
-and reg,reg2
+and R16,R17
