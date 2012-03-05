@@ -13,12 +13,17 @@ import java.util.LinkedList;
  */
 public class WPParser
 {
-    HashMap<String, WPChunk> chunkBag = new HashMap();
+    private HashMap<String, WPChunk> chunkBag = new HashMap();
 
     //Public methods
     // get_opcode - Used by assember
     // get_pattern - Used by simulator
 
+    public WPParser()
+    {
+        this("../avrassembly.wp");
+    }
+    
     public WPParser(String path)
     {
         for (String line : this.removeComments(this.getLines(path)))
@@ -26,6 +31,23 @@ public class WPParser
             WPChunk chunk = new WPChunk(line);
             chunkBag.put(chunk.getOpName(), chunk);
         }
+    }
+    
+    /**
+     * Take an opcode including data and return the WPChunk representing the operation
+     * @param s
+     */
+    public WPChunk search(String code)
+    {
+        for (WPChunk c : this.chunkBag.values())
+        {
+            if (c.match(code))
+            {
+                return c;
+            }
+        }
+        
+        return null;
     }
     
     public List<String> getLines(String path)
@@ -58,5 +80,12 @@ public class WPParser
             }
         }
         return lines;
+    }
+    
+    // Public Getter Methods
+    
+    public WPChunk getChunk(String name)
+    {
+        return this.chunkBag.get(name);
     }
 }

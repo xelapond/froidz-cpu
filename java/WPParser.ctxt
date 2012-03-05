@@ -1,8 +1,15 @@
 #BlueJ class context
-comment0.params=path
-comment0.target=WPParser(java.lang.String)
+comment0.params=
+comment0.target=WPParser()
 comment1.params=path
-comment1.target=java.util.List\ getLines(java.lang.String)
-comment2.params=lines
-comment2.target=java.util.List\ removeComments(java.util.List)
-numComments=3
+comment1.target=WPParser(java.lang.String)
+comment2.params=code
+comment2.target=WPChunk\ search(java.lang.String)
+comment2.text=\n\ Take\ an\ opcode\ including\ data\ and\ return\ the\ WPChunk\ representing\ the\ operation\n\ @param\ s\n
+comment3.params=path
+comment3.target=java.util.List\ getLines(java.lang.String)
+comment4.params=lines
+comment4.target=java.util.List\ removeComments(java.util.List)
+comment5.params=name
+comment5.target=WPChunk\ getChunk(java.lang.String)
+numComments=6
