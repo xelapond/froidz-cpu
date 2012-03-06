@@ -181,6 +181,15 @@ public class Binary
         return pad(Integer.toBinaryString(this.value), this.numBits);
     }
     
+    public Binary split(int start, int end)
+    {
+        return new Binary("0b" + this.toBinaryString().substring(start, end));
+    }
+    public Binary split(int start)
+    {
+        return new Binary("0b" + this.toBinaryString().substring(start));
+    }
+    
     public int minNumBits()
     {
         return Integer.toBinaryString(this.value).length();
