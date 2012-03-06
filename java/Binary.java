@@ -142,6 +142,22 @@ public class Binary
         this.value = stringToValue("0b" + newValue);
     }
     
+    public void add(Binary... args)
+    {
+        for (Binary b : args)
+        {
+            this.value += b.getValue();
+            if (b.numBits > this.numBits)
+            {
+                this.numBits = b.numBits;
+            }   
+        }
+        if (this.minNumBits() > this.numBits)
+        {
+            this.numBits = this.minNumBits();
+        }
+    }
+    
     public Binary lsbyte()
     {
         String hex = this.toString();
@@ -151,7 +167,7 @@ public class Binary
     
     public Binary twoComp()
     {
-        return new Binary(Math.pow(2, this.numBits()) - this.value);
+        return new Binary(Math.pow(2, this.minNumBits()) - this.value);
     }
     
     public String toString()
@@ -164,7 +180,7 @@ public class Binary
         return pad(Integer.toBinaryString(this.value), this.numBits);
     }
     
-    public int numBits()
+    public int minNumBits()
     {
         return Integer.toBinaryString(this.value).length();
     }
