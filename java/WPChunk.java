@@ -12,10 +12,10 @@ import java.util.HashMap;
  */
 public class WPChunk
 {   
-    private String opName;
-    private String[] operands;
-    private String[] ranges;
-    private String opCode;
+    private String opName; // The syntax eg. "add"
+    private String[] operands; // The operands eg. {"Rd=mnopq", "Rr=abcde"}
+    private String[] ranges; // The ranges eg. {"0-Rd-31", "0-Rr-31"}
+    private String opCode; // The template eg. "0010 00am nopq bcde"
     
     private Pattern opCodePattern;
     
@@ -49,9 +49,8 @@ public class WPChunk
      * argX is a string representation of a hex value
      * @param List<String> (name, arg0, arg1, ... , argN)
      */
-    public Binary generateInstruction(List<String> asm)
+    public Binary generateInstruction(List<String> asm) throws InvalidInputException
     {
-        /*
         // Check to make sure that the number of arguments to this method equals
         // the number of operands that this operation takes.
         if (!asm.get(0).equals(this.opName) || asm.size() - 1 != operands.length)
@@ -59,21 +58,27 @@ public class WPChunk
             System.out.println("invalid input");
             return null;
         }
+        for (int i = 1; i < asm.size(); i++)
+        {
+            if (asm.get(i).length() != this.operands[i - 1].split("=")[1].length())
+            {
+                throw new InvalidInputException();
+            }
+        }
         
         String instruction = this.opCode;
         for (int op = 0; op < operands.length; op++)
         {
             String operand = this.operands[op].split("=")[1]; // Template of input
+            System.out.println(operand);
             String asmInput = asm.get(op + 1);  // Instuction operand
-            for (int i = 0; i < operand.length() - offset; i++)
+            System.out.println(asmInput);
+            for (int i = 0; i < operand.length(); i++)
             {
-                instruction = instruction.replaceAll(operand.charAt(i + offset) + "", asmInput.charAt(i) + "");
+                instruction = instruction.replaceAll(operand.charAt(i) + "", asmInput.charAt(i) + "");
             }
         }
-        
-        return instruction;
-        */
-       return new Binary("0x00");
+        return new Binary("0b" + instruction);
     }
     
     /**
