@@ -48,6 +48,44 @@ public class ASMParser
         }
         
         this.parser = new WPParser();
+        
+        List<Binary> insts = new ArrayList();
+        
+        this.format(lines);
+        this.preprocess(lines);
+
+        for (Object o : lines)
+        {
+            System.out.print(o);
+        }
+        System.out.println();
+        
+        insts = this.generateInstructions(lines);
+        
+        for (Object o : insts)
+        {
+            System.out.print(o);
+        }
+        System.out.println();
+        
+        insts = this.separateInstructions(insts);
+        
+        
+                for (Object o : insts)
+        {
+            System.out.print(o);
+        }
+        System.out.println();
+        
+        generateByteCountsAndAddresses(insts);
+        
+                for (Object o : insts)
+        {
+            System.out.print(o);
+        }
+        System.out.println();
+        
+        
         //this.generateInstructions(this.preprocess(this.format(lines)));
     }
     
@@ -101,13 +139,13 @@ public class ASMParser
     {
         Iterator<Binary> it = instructions.iterator();
         
-        List<String> out = new ArrayList();
+        List<Binary> out = new ArrayList();
         
         Binary curLine;
         
         while (it.hasNext())
         {
-            curLine = new Binary("0x00");
+            curLine = new Binary();
             for(int i = 0; it.hasNext() && i < wordsPerLine; i++)
             {
                 curLine.concatBack(it.next());
@@ -130,7 +168,7 @@ public class ASMParser
         
         for (Binary line : lines)
         {
-            Binary byteCount = line.minNumBits();
+            Binary byteCount = new Binary("0b" + Integer.toBinaryString(line.minNumBits()));
             line.concatFront(addr);
             line.concatFront(byteCount);
             addr.add(byteCount);
@@ -147,7 +185,7 @@ public class ASMParser
         }
     }
     
-    public void addEOF(List<String> lines)
+    public void addEOF(List<Binary> lines)
     {
         lines.add(ASMParser.EOF);
     }
@@ -185,9 +223,9 @@ public class ASMParser
 
     }
     
-    public static String generateLineChecksum(String line)
+    public static Binary generateLineChecksum(String line)
     {
-        return null;
+        return new Binary("0x00");
     }
     
 
@@ -222,7 +260,7 @@ public class ASMParser
         lines.add("AC");
         lines.add("DC");
     
-        lines = separateInstructions(lines);
+        //lines = separateInstructions(lines);
         
         for (String l : lines)
         {

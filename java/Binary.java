@@ -43,6 +43,10 @@ public class Binary
         this.value = (int)(double)value;
     }
     
+    public Binary()
+    {
+    }
+    
     public Binary(String value)
     {
         if (isHex(value))
