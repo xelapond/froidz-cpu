@@ -7,6 +7,7 @@ import java.util.HashMap;
  */
 public class Binary
 {
+    // Allows for quick conversions from hex to decimal.
     private static HashMap<String, Integer> hexConverter = initHexConverter();    
     private static HashMap<String, Integer> initHexConverter()
     {
@@ -30,8 +31,8 @@ public class Binary
         return hexConverter;
     }
     
-    private int value = 0;
-    private int numBits = 0;
+    private int value = 0; // Holds the value of the binary number.
+    private int numBits = 0; // Holds the number of bits to display of the number.
     
     private Binary(Integer value)
     {
