@@ -122,7 +122,7 @@ public class WPChunk
         }
         else
         {
-            if (num.charAt(0).equalsIgnoreCase('r'))
+            if (num.substring(0,1).equalsIgnoreCase("r"))
             {
                 num = num.substring(1);
             }
