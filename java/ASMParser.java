@@ -12,7 +12,7 @@ import java.util.Arrays;
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class ASMParser
+public class ASMParser 
 {
     public static final int AVR_WORDS_PER_LINE = 8;
     private static final Binary EOF = new Binary("0x00000001FF");
@@ -20,7 +20,7 @@ public class ASMParser
 
     private WPParser parser;
 
-    public ASMParser()
+    public ASMParser() throws InvalidInputException
     {
         this("../test.asm");
     }
@@ -29,7 +29,7 @@ public class ASMParser
      * Create an assembly parser given a path to an assembly file
      * @param path The path to the file
      */
-    public ASMParser(String path)
+    public ASMParser(String path) throws InvalidInputException
     {
         LinkedList<String> lines = new LinkedList();
         
@@ -50,17 +50,28 @@ public class ASMParser
         this.parser = new WPParser();
         
         List<Binary> insts = new ArrayList();
+        List<List<String>> parsed = new ArrayList();
         
         this.format(lines);
-        this.preprocess(lines);
+        parsed = this.preprocess(lines);
 
         for (Object o : lines)
+        {
+            System.out.print(o + " ");
+        }
+        System.out.println();
+        
+        insts = this.generateInstructions(parsed);
+        
+        for (Object o : insts)
         {
             System.out.print(o);
         }
         System.out.println();
+        System.out.println("HI");
         
-        insts = this.generateInstructions(lines);
+        insts = this.separateInstructions(insts);
+        
         
         for (Object o : insts)
         {
@@ -68,22 +79,14 @@ public class ASMParser
         }
         System.out.println();
         
-        insts = this.separateInstructions(insts);
-        
-        
-                for (Object o : insts)
-        {
-            System.out.print(o);
-        }
-        System.out.println();
-        
         generateByteCountsAndAddresses(insts);
         
-                for (Object o : insts)
+        for (Object o : insts)
         {
             System.out.print(o);
         }
         System.out.println();
+        System.out.println("ASSEMBLY DONE");
         
         
         //this.generateInstructions(this.preprocess(this.format(lines)));
@@ -108,25 +111,37 @@ public class ASMParser
         
     }
     
-    private void preprocess(List<String> lines)
+    private List<List<String>> preprocess(List<String> lines)
     {
-
+        List<List<String>> processed = new ArrayList();
+        
+        for (String l : lines)
+        {
+            List<String> p = this.parseLine(l);
+            for (int i = 1; i < p.size(); i++)
+            {
+                p.set(i, p.get(i).replace("R", ""));
+            }
+            processed.add(p);
+        }
+        
+        return processed;  
     }
     
-    private List<Binary> generateInstructions(List<String> lines)
+    private List<Binary> generateInstructions(List<List<String>> lines) throws InvalidInputException
     {
         ArrayList<Binary> instructions = new ArrayList();
         
-        for (String line : lines)
+        for (List<String> parsed : lines)
         {
-            List<String> parsed = this.parseLine(line);
+            //List<String> parsed = this.parseLine(line);
             
             WPChunk op = this.parser.getChunk(parsed.get(0));
+            
             instructions.add(op.generateInstruction(parsed));
         }
         
-        return instructions;
-            
+        return instructions;    
     }
     
     /**
