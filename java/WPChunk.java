@@ -49,7 +49,7 @@ public class WPChunk
      * argX is a string representation of a hex value
      * @param List<String> (name, arg0, arg1, ... , argN)
      */
-    public String generateInstruction(List<String> asm)
+    public Binary generateInstruction(List<String> asm)
     {
         /*
         // Check to make sure that the number of arguments to this method equals
@@ -73,7 +73,7 @@ public class WPChunk
         
         return instruction;
         */
-       return null;
+       return new Binary("0x00");
     }
     
     /**

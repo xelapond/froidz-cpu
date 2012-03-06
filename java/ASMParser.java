@@ -15,8 +15,8 @@ import java.util.Arrays;
 public class ASMParser
 {
     public static final int AVR_WORDS_PER_LINE = 8;
-    private static final String EOF = "00000001FF";
-    private static final Binary DATA_RECORD = Binary("00");
+    private static final Binary EOF = new Binary("0x00000001FF");
+    private static final Binary DATA_RECORD = new Binary("0x00");
 
     private WPParser parser;
 
@@ -107,10 +107,10 @@ public class ASMParser
         
         while (it.hasNext())
         {
-            curLine = new Binary();
+            curLine = new Binary("0x00");
             for(int i = 0; it.hasNext() && i < wordsPerLine; i++)
             {
-                curLine += it.next();
+                curLine.concatBack(it.next());
             }
             out.add(curLine);
         }
@@ -126,17 +126,25 @@ public class ASMParser
     
     private void generateByteCountsAndAddresses(List<Binary> lines)
     {
+        Binary addr = new Binary("0x0000");
         
-        for (String line : lines)
+        for (Binary line : lines)
         {
+            Binary byteCount = line.minNumBits();
+            line.concatFront(addr);
+            line.concatFront(byteCount);
+            addr.add(byteCount);
         }
         
 
     }
     
-    private void generateCheckSums(List<String> lines)
+    private void generateCheckSums(List<Binary> lines)
     {
-
+        for(Binary b : lines)
+        {
+            b.concatFront(ASMParser.generateLineChecksum(b.toString()));
+        }
     }
     
     public void addEOF(List<String> lines)
@@ -145,12 +153,12 @@ public class ASMParser
     }
     
     /**
-     * Add the preceding colons to every line of Intel Hex
+     * Add the preceding colons to every line of Intel Hex and convert the binary objects to Strings
      * @param 
      */
     private List<String> finalize(List<String> lines)
     {
-        List l = new ArrayList();
+        List<String> l = new ArrayList();
         
         for (String line : lines)
         {
