@@ -3,7 +3,7 @@ import java.util.HashMap;
  * Deals with binary numbers.
  * 
  * @author Jacob Weiss
- * @version 0.0.1
+ * @version 0.0.2
  */
 public class Binary
 {
@@ -31,20 +31,43 @@ public class Binary
     }
     
     private int value = 0;
+    private int numBits = 0;
     
-    public Binary(Integer value)
+    private Binary(Integer value)
     {
         this.value = value;
     }
     
-    public Binary(Double value)
+    private Binary(Double value)
     {
         this.value = (int)(double)value;
     }
     
     public Binary(String value)
     {
+        if (isHex(value))
+        {
+            this.numBits = (value.length() - 2) * 4;
+        }
+        else if (isBinary(value))
+        {
+            this.numBits = (value.length() - 2);
+        }
+        else
+        {            
+            assert false : "Invalid input";
+        }
+        
         this.value = this.stringToValue(value);
+    }
+    
+    static public boolean isHex(String s)
+    {
+        return s.substring(0, 2).equalsIgnoreCase("0x");
+    }
+    static public boolean isBinary(String s)
+    {
+        return s.substring(0, 2).equalsIgnoreCase("0b");
     }
     
     static public int stringToValue(String input)
@@ -81,10 +104,42 @@ public class Binary
         }
         else
         {
-            value = Integer.parseInt(base + input);
+            assert false : "Invalid input";
         }
         
         return value;
+    }
+    
+    public String pad(String s, int numChars)
+    {
+        while (s.length() < numChars)
+        {
+            s = "0" + s;
+        }
+        return s;
+    }
+    
+    public void concatBack(Binary... args)
+    {
+        String newValue = this.toBinaryString();
+        for (Binary b : args)
+        {
+            newValue = newValue + b.toBinaryString();
+            this.numBits += b.numBits;
+        }
+        this.value = stringToValue("0b" + newValue);
+    }
+    
+    public void concatFront(Binary... args)
+    {
+        String newValue = this.toBinaryString();
+        for (int i = args.length - 1; i >= 0; i--)
+        {
+            Binary b = args[i];
+            newValue = b.toBinaryString() + newValue;
+            this.numBits += b.numBits;
+        }
+        this.value = stringToValue("0b" + newValue);
     }
     
     public Binary lsbyte()
@@ -101,7 +156,12 @@ public class Binary
     
     public String toString()
     {
-        return Integer.toHexString(this.value).toUpperCase();
+        return pad(Integer.toHexString(this.value).toUpperCase(), (int)Math.ceil((this.numBits) / 4.0));
+    }
+    
+    public String toBinaryString()
+    {
+        return pad(Integer.toBinaryString(this.value), this.numBits);
     }
     
     public int numBits()
