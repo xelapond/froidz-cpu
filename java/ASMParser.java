@@ -15,6 +15,8 @@ import java.util.Arrays;
 public class ASMParser
 {
     public static final int AVR_WORDS_PER_LINE = 8;
+    private static final String EOF = "00000001FF";
+    private static final Binary DATA_RECORD = Binary("00");
 
     private WPParser parser;
 
@@ -23,6 +25,10 @@ public class ASMParser
         this("../test.asm");
     }
     
+    /**
+     * Create an assembly parser given a path to an assembly file
+     * @param path The path to the file
+     */
     public ASMParser(String path)
     {
         LinkedList<String> lines = new LinkedList();
@@ -35,10 +41,6 @@ public class ASMParser
             {
                 lines.add(scanner.nextLine());
             }
-            for (String s : this.format(lines))
-            {
-                System.out.println(s);
-            }
         }
         catch (Throwable e)
         {
@@ -49,8 +51,10 @@ public class ASMParser
         //this.generateInstructions(this.preprocess(this.format(lines)));
     }
     
-    //TODO: Remove comments
-    private List<String> format(List<String> lines)
+    /**
+     * Remove all newlines
+     */
+    private void format(List<String> lines)
     {
         Iterator<String> i = lines.iterator();
         String line;
@@ -64,17 +68,16 @@ public class ASMParser
             }
         }
         
-        return lines;
     }
     
-    private List<String> preprocess(List<String> lines)
+    private void preprocess(List<String> lines)
     {
-        return lines;
+
     }
     
-    private List<String> generateInstructions(List<String> lines)
+    private List<Binary> generateInstructions(List<String> lines)
     {
-        ArrayList<String> instructions = new ArrayList();
+        ArrayList<Binary> instructions = new ArrayList();
         
         for (String line : lines)
         {
@@ -94,22 +97,21 @@ public class ASMParser
      * @param wordsPerLine The number of words to put on one line in the hex file
      * @return List of lines, wordsPerLine words to a line
      */
-    private List<String> separateInstructions(List<String> lines, int wordsPerLine)
+    private List<Binary> separateInstructions(List<Binary> instructions, int wordsPerLine)
     {
-        Iterator<String> it = lines.iterator();
+        Iterator<Binary> it = instructions.iterator();
         
         List<String> out = new ArrayList();
         
-        String curLine = "";
+        Binary curLine;
         
         while (it.hasNext())
         {
-            curLine = "";
+            curLine = new Binary();
             for(int i = 0; it.hasNext() && i < wordsPerLine; i++)
             {
                 curLine += it.next();
             }
-            System.out.println();
             out.add(curLine);
         }
         
@@ -117,27 +119,30 @@ public class ASMParser
             
     }
     
-    private List<String> separateInstructions(List<String> lines)
+    private List<Binary> separateInstructions(List<Binary> instructions)
     {
-        return separateInstructions(lines, ASMParser.AVR_WORDS_PER_LINE);
+        return separateInstructions(instructions, ASMParser.AVR_WORDS_PER_LINE);
     }
     
-    private List<String> generateByteCountsAndAddresses(List<String> lines)
+    private void generateByteCountsAndAddresses(List<Binary> lines)
     {
-        List<String> l = new ArrayList();
         
         for (String line : lines)
         {
         }
         
-        return null;
+
     }
     
-    private List<String> generateCheckSums(List<String> lines)
+    private void generateCheckSums(List<String> lines)
     {
-        return lines;
+
     }
     
+    public void addEOF(List<String> lines)
+    {
+        lines.add(ASMParser.EOF);
+    }
     
     /**
      * Add the preceding colons to every line of Intel Hex
@@ -154,6 +159,7 @@ public class ASMParser
         
         return l;
     }
+
         
     public static List<String> parseLine(String line)
     {
@@ -175,6 +181,8 @@ public class ASMParser
     {
         return null;
     }
+    
+
     
     public void test()
     {
