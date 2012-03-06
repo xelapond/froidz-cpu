@@ -11,30 +11,7 @@ import java.util.HashMap;
  * @version 0.0.1
  */
 public class WPChunk
-{
-    private static HashMap<String, String> hexConverter = WPChunk.initHexConverter();    
-    private static HashMap<String, String> initHexConverter()
-    {
-        HashMap<String, String> hexConverter = new HashMap();
-        hexConverter.put("0", "0000");
-        hexConverter.put("1", "0001");
-        hexConverter.put("2", "0010");
-        hexConverter.put("3", "0011");
-        hexConverter.put("4", "0100");
-        hexConverter.put("5", "0101");
-        hexConverter.put("6", "0110");
-        hexConverter.put("7", "0111");
-        hexConverter.put("8", "1000");
-        hexConverter.put("9", "1001");
-        hexConverter.put("A", "1010");
-        hexConverter.put("B", "1011");
-        hexConverter.put("C", "1100");
-        hexConverter.put("D", "1101");
-        hexConverter.put("E", "1110");
-        hexConverter.put("F", "1111");
-        return hexConverter;
-    }
-    
+{   
     private String opName;
     private String[] operands;
     private String[] ranges;
@@ -67,28 +44,27 @@ public class WPChunk
     /**
      * generateInstruction()
      * 
+     * PRECONDITION: 
+     * 
      * argX is a string representation of a hex value
      * @param List<String> (name, arg0, arg1, ... , argN)
      */
     public String generateInstruction(List<String> asm)
     {
+        /*
+        // Check to make sure that the number of arguments to this method equals
+        // the number of operands that this operation takes.
         if (!asm.get(0).equals(this.opName) || asm.size() - 1 != operands.length)
         {
             System.out.println("invalid input");
             return null;
         }
         
-        for (int i = 1; i < asm.size(); i++)
-        {
-            asm.set(i, numberToBinary(asm.get(i)));
-        }
-        
         String instruction = this.opCode;
         for (int op = 0; op < operands.length; op++)
         {
-            String operand = this.operands[op];
-            String asmInput = asm.get(op + 1);
-            int offset = operand.indexOf("=") + 1;
+            String operand = this.operands[op].split("=")[1]; // Template of input
+            String asmInput = asm.get(op + 1);  // Instuction operand
             for (int i = 0; i < operand.length() - offset; i++)
             {
                 instruction = instruction.replaceAll(operand.charAt(i + offset) + "", asmInput.charAt(i) + "");
@@ -96,32 +72,8 @@ public class WPChunk
         }
         
         return instruction;
-    }
-    
-    public String numberToBinary(String num)
-    {
-        if (num.substring(0, 2).equals("0x"))
-        {
-            System.out.println("hello");
-            String binary = "";
-            for (int i = 2; i < num.length(); i++)
-            {
-                binary += WPChunk.hexConverter.get(num.substring(i, i+1));
-            }
-            return binary;
-        }
-        else if (num.substring(0, 2).equals("0b"))
-        {
-            return num.substring(2);
-        }
-        else
-        {
-            if (num.charAt(0).equalsIgnoreCase('r'))
-            {
-                num = num.substring(1);
-            }
-            return Integer.toBinaryString(Integer.parseInt(num));
-        }
+        */
+       return null;
     }
     
     /**
