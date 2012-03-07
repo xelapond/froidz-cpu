@@ -44,8 +44,6 @@ public class WPChunk
     /**
      * generateInstruction()
      * 
-     * PRECONDITION: 
-     * 
      * argX is a string representation of a hex value
      * @param List<String> (name, arg0, arg1, ... , argN)
      */
@@ -61,14 +59,11 @@ public class WPChunk
         for (int i = 1; i < asm.size(); i++)
         {
             System.out.print(asm.get(i) + " --- ");
-            // THIS DOESN'T WORK BECAUSE asm.get(i) RETURNS A STRING, NOT A BINARY OBJECT, SO THE LENGTH WILL NEVER BE EQUAL
-            // ADDITIONALLY, IT SHOULD PROBABLY BE A >= CHECK INSTEAD OF !=, BECAUSE IT COULD BE SHORTER
-            //if (asm.get(i).length() != this.operands[i - 1].split("=")[1].length())
-            //{
-            //    throw new InvalidInputException();
-            //}
+            if (asm.get(i).length() >= this.operands[i - 1].split("=")[1].length())
+            {
+                throw new InvalidInputException();
+            }
         }
-        System.out.println();
         
         String instruction = this.opCode;
         for (int op = 0; op < operands.length; op++)
@@ -77,7 +72,7 @@ public class WPChunk
             System.out.println(operand);
             Binary asmInput = new Binary(asm.get(op + 1));  // Instuction operand
             System.out.println(asm.get(op + 1));
-            for (int i = 0; i < operand.length(); i++)
+            for (int i = operand.length() - 1; i >= 0; i--)
             {
                 instruction = instruction.replaceAll(operand.charAt(i) + "", asmInput.toBinaryString().charAt(i) + "");
             }
