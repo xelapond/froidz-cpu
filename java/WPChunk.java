@@ -8,7 +8,7 @@ import java.util.HashMap;
  * There is one WPChunk for every operation in the AVR Assembly Definition
  * 
  * @author Jacob Weiss,Alex Teiche 
- * @version 0.0.1
+ * @version 0.0.2
  */
 public class WPChunk
 {   
@@ -41,25 +41,27 @@ public class WPChunk
         return this.opCodePattern.matcher(opCode).matches();
     }
     
+    public Binary generateInstruction(Binary... args)
+    {
+        return this.generateInstruction(args);
+    }
     /**
      * generateInstruction()
      * 
      * argX is a string representation of a hex value
      * @param List<String> (name, arg0, arg1, ... , argN)
      */
-    public Binary generateInstruction(List<String> asm) throws InvalidInputException
+    public Binary generateInstruction(List<Binary> asm) throws InvalidInputException
     {
         // Check to make sure that the number of arguments to this method equals
         // the number of operands that this operation takes.
-        if (!asm.get(0).equals(this.opName) || asm.size() - 1 != operands.length)
+        if (asm.size() != operands.length)
         {
-            System.out.println("invalid input");
-            return null;
+            throw new InvalidInputException();
         }
-        for (int i = 1; i < asm.size(); i++)
+        for (int i = 0; i < asm.size(); i++)
         {
-            System.out.print(asm.get(i) + " --- ");
-            if (asm.get(i).length() >= this.operands[i - 1].split("=")[1].length())
+            if (asm.get(i).getNumBits() >= this.operands[i].split("=")[1].length())
             {
                 throw new InvalidInputException();
             }
@@ -68,13 +70,11 @@ public class WPChunk
         String instruction = this.opCode;
         for (int op = 0; op < operands.length; op++)
         {
-            String operand = this.operands[op].split("=")[1]; // Template of input
-            System.out.println(operand);
-            Binary asmInput = new Binary(asm.get(op + 1));  // Instuction operand
-            System.out.println(asm.get(op + 1));
-            for (int i = operand.length() - 1; i >= 0; i--)
+            String operandTemplate = this.operands[op].split("=")[1]; // Template of input
+            Binary asmInput = asm.get(op);  // Instuction operand
+            for (int i = operandTemplate.length() - 1; i >= 0; i--)
             {
-                instruction = instruction.replaceAll(operand.charAt(i) + "", asmInput.toBinaryString().charAt(i) + "");
+                instruction = instruction.replaceAll(operandTemplate.substring(i, i + 1), asmInput.toBinaryString().substring(i, i + 1));
             }
         }
         return new Binary("0b" + instruction);

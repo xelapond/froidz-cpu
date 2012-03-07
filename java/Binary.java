@@ -76,7 +76,7 @@ public class Binary
      */
     public Binary(Integer input)
     {
-        this(Integer.toBinaryString(input));
+        this("0b" + Integer.toBinaryString(input));
     }    
     
     // ***********************************Static methods**********************************
