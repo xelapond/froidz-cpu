@@ -1,6 +1,6 @@
 import java.util.HashMap;
 /**
- * Represents a binary number and performs operations on it.
+ * Represents a binary number using a String and performs operations on it.
  * 
  * @author Jacob Weiss
  * @version 0.0.4
@@ -64,7 +64,20 @@ public class Binary
         }
         
         this.value = (int)value;
-    }
+    } 
+    /**
+     * Binary(int input, int minNumBits)
+     * 
+     * The number of bits remembered is at least minNumBits.
+     * 
+     * @param  value is a base 10 int
+     *         valid formats: dec -> {0-9}
+     * @param  minNumBits  the number of bits to remember, at least.
+     */
+    public Binary(Integer input, int minNumBits)
+    {
+        this("0b" + pad(Integer.toBinaryString(input), minNumBits));
+    } ;
     /**
      * Binary(int input)
      * 
@@ -77,7 +90,7 @@ public class Binary
     public Binary(Integer input)
     {
         this("0b" + Integer.toBinaryString(input));
-    }    
+    }
     
     // ***********************************Static methods**********************************
     
@@ -119,7 +132,7 @@ public class Binary
      * @return the double value contained in the string
      *         Double.NaN if the binary string is not correctly formatted.
      */
-    static public double binaryToValue(String s)
+    public static double binaryToValue(String s)
     {
         if (!s.substring(0, 2).equalsIgnoreCase("0b"))
         {
@@ -137,8 +150,7 @@ public class Binary
         }
         return value;
     }
-    
-    
+        
     /**
      * pad(String s, int numChars)
      * 
@@ -149,7 +161,7 @@ public class Binary
      * @return String    the new string with preceding "0"s or...
      *                      the input string if numChars <= s.length()
      */
-    private String pad(String s, int numChars)
+    private static String pad(String s, int numChars)
     {
         while (s.length() < numChars)
         {
@@ -187,9 +199,9 @@ public class Binary
     }
     
     /**
-     * concatBack(Binary... args)
+     * concatFront(Binary... args)
      * 
-     * Concatenates the given binary objects to the end of this.
+     * Concatenates the given binary objects to the front of this.
      * ***Modifies this***
      * 
      * Eg. this.toBinaryString() = "1111"
@@ -246,7 +258,6 @@ public class Binary
     public Binary leastSignificantByte()
     {
         String hex = this.toString();
-        System.out.println("0x" + hex.substring(hex.length() - 1));
         return new Binary("0x" + hex.substring(hex.length() - 1));
     }
     
