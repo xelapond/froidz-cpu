@@ -8,7 +8,7 @@ import java.util.HashMap;
  * There is one WPChunk for every operation in the AVR Assembly Definition
  * 
  * @author Jacob Weiss,Alex Teiche 
- * @version 0.0.2
+ * @version 0.0.4
  */
 public class WPChunk
 {   
@@ -41,15 +41,12 @@ public class WPChunk
         return this.opCodePattern.matcher(opCode).matches();
     }
     
-    public Binary generateInstruction(Binary... args)
-    {
-        return this.generateInstruction(args);
-    }
     /**
      * generateInstruction()
      * 
-     * argX is a string representation of a hex value
-     * @param List<String> (name, arg0, arg1, ... , argN)
+     * Takes a list of Binary objects that correspond with the operands of this.
+     * 
+     * @param List<Binary>  the list of operands
      */
     public Binary generateInstruction(List<Binary> asm) throws InvalidInputException
     {
@@ -61,7 +58,7 @@ public class WPChunk
         }
         for (int i = 0; i < asm.size(); i++)
         {
-            if (asm.get(i).getNumBits() >= this.operands[i].split("=")[1].length())
+            if (asm.get(i).getNumBits() < this.operands[i].split("=")[1].length())
             {
                 throw new InvalidInputException();
             }
@@ -71,13 +68,20 @@ public class WPChunk
         for (int op = 0; op < operands.length; op++)
         {
             String operandTemplate = this.operands[op].split("=")[1]; // Template of input
-            Binary asmInput = asm.get(op);  // Instuction operand
-            for (int i = operandTemplate.length() - 1; i >= 0; i--)
+            int operandTemplateLength = operandTemplate.length();
+            String asmInput = asm.get(op).toBinaryString();  // Instuction operand
+            int asmInputLength = asmInput.length();
+            for (int i = 0; i < operandTemplate.length(); i++)
             {
-                instruction = instruction.replaceAll(operandTemplate.substring(i, i + 1), asmInput.toBinaryString().substring(i, i + 1));
+                instruction = instruction.replaceAll(operandTemplate.substring(operandTemplateLength - i - 1, operandTemplateLength - i), 
+                                                            asmInput.substring(asmInputLength - i - 1, asmInputLength - i));
             }
         }
         return new Binary("0b" + instruction);
+    }
+    public Binary generateInstruction(Binary... args)
+    {
+        return this.generateInstruction(args);
     }
     
     /**
@@ -94,18 +98,15 @@ public class WPChunk
     public String getOpName()
     {
         return this.opName;
-    }
-    
+    }    
     public String[] getOperands()
     {
         return this.operands;
-    }
-    
+    }    
     public String[] getRanges()
     {
         return this.ranges;
-    }
-    
+    }    
     public String getOpCode()
     {
         return this.opCode;
