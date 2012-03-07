@@ -52,7 +52,10 @@ public class ASMParser
         List<Binary> insts = new ArrayList();
         List<List<String>> parsed = new ArrayList();
         
+        System.out.println("FORMATTING ASSEMBLY FILE");
         this.format(lines);
+        
+        System.out.println("PREPROCESSING");
         parsed = this.preprocess(lines);
 
         for (Object o : lines)
@@ -61,6 +64,7 @@ public class ASMParser
         }
         System.out.println();
         
+        System.out.println("GENERATING INSTRUCTIONS");
         insts = this.generateInstructions(parsed);
         
         for (Object o : insts)
@@ -68,8 +72,8 @@ public class ASMParser
             System.out.print(o);
         }
         System.out.println();
-        System.out.println("HI");
         
+        System.out.println("GROUPING INSTRUCTIONS");
         insts = this.separateInstructions(insts);
         
         
@@ -79,6 +83,7 @@ public class ASMParser
         }
         System.out.println();
         
+        System.out.println("GENERATING ADDRESSES AND LINE BYTE COUNTS");
         generateByteCountsAndAddresses(insts);
         
         for (Object o : insts)
@@ -138,7 +143,9 @@ public class ASMParser
             
             WPChunk op = this.parser.getChunk(parsed.get(0));
             
-            instructions.add(op.generateInstruction(parsed));
+            List<Binary> operands = this.makeBinariesFromOperands(parsed.subList(1, parsed.size()));
+            
+            instructions.add(op.generateInstruction(operands));
         }
         
         return instructions;    
@@ -160,10 +167,13 @@ public class ASMParser
         
         while (it.hasNext())
         {
-            curLine = new Binary();
+            curLine = new Binary("0x0");
             for(int i = 0; it.hasNext() && i < wordsPerLine; i++)
             {
-                curLine.concatBack(it.next());
+                Binary c = it.next();
+                System.out.println("    " + c);
+                
+                curLine.concatBack(c);
             }
             out.add(curLine);
         }
@@ -238,10 +248,23 @@ public class ASMParser
 
     }
     
+    public List<Binary> makeBinariesFromOperands(List<String> ops)
+    {
+        List<Binary> bins = new ArrayList();
+        
+        for (String s : ops)
+        {
+            bins.add(new Binary(s));
+        }
+        
+        return bins;
+    }
+    
     public static Binary generateLineChecksum(String line)
     {
         return new Binary("0x00");
     }
+   
     
 
     

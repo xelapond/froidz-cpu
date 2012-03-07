@@ -60,7 +60,7 @@ public class Binary
         }
         else
         {
-            assert false : "Invalid input";
+            assert false : "Invalid input: " + input;
         }
         
         this.value = (int)value;
@@ -78,6 +78,12 @@ public class Binary
     {
         this("0b" + Integer.toBinaryString(input));
     }    
+    
+    public Binary()
+    {
+        this.value = 0;
+        this.numBits = 0;
+    }
     
     // ***********************************Static methods**********************************
     

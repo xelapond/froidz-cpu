@@ -52,6 +52,13 @@ public class WPChunk
     {
         // Check to make sure that the number of arguments to this method equals
         // the number of operands that this operation takes.
+        
+        for (Binary e : asm)
+        {
+            System.out.print(e + " ");
+        }
+        System.out.println();
+        
         if (asm.size() != operands.length)
         {
             throw new InvalidInputException();
