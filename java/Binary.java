@@ -3,7 +3,7 @@ import java.util.HashMap;
  * Represents a binary number and performs operations on it.
  * 
  * @author Jacob Weiss
- * @version 0.0.3
+ * @version 0.0.4
  */
 public class Binary
 {
