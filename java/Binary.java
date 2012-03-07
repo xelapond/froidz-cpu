@@ -1,38 +1,24 @@
+import java.lang.NumberFormatException;
 import java.util.HashMap;
+import java.util.Iterator;
 /**
  * Represents a binary number using a String and performs operations on it.
  * 
  * @author Jacob Weiss
- * @version 0.0.4
+ * @version 0.0.5
  */
 public class Binary
-{
-    // Allows for quick conversions from hex to decimal.
-    private static HashMap<String, Integer> hexConverter = initHexConverter();    
-    private static HashMap<String, Integer> initHexConverter()
-    {
-        HashMap<String, Integer> hexConverter = new HashMap();
-        hexConverter.put("0", 0);
-        hexConverter.put("1", 1);
-        hexConverter.put("2", 2);
-        hexConverter.put("3", 3);
-        hexConverter.put("4", 4);
-        hexConverter.put("5", 5);
-        hexConverter.put("6", 6);
-        hexConverter.put("7", 7);
-        hexConverter.put("8", 8);
-        hexConverter.put("9", 9);
-        hexConverter.put("A", 10);
-        hexConverter.put("B", 11);
-        hexConverter.put("C", 12);
-        hexConverter.put("D", 13);
-        hexConverter.put("E", 14);
-        hexConverter.put("F", 15);
-        return hexConverter;
-    }
+{   
+    private String value = ""; // Holds the value of the binary number.
     
-    private int value = 0; // Holds the value of the binary number.
-    private int numBits = 0; // Holds the number of bits to display of the number.
+    static HashMap<String, Integer> bases = initBases();
+    private static HashMap<String, Integer> initBases()
+    {
+        HashMap<String, Integer> bases = new HashMap();
+        bases.put("0x", 16);
+        bases.put("0b", 2);
+        return bases;
+    }
     
     /**
      * Binary(String input)
@@ -48,22 +34,15 @@ public class Binary
      */
     public Binary(String input)
     {
-        double value = 0;
-
-        if (!Double.isNaN(value = hexToValue(input)))
+        try
         {
-            this.numBits = (input.length() - 2) * 4;
+            int base = bases.get(input.substring(0, 2));
+            this.value = stringToBinaryString(input.substring(2), base);
         }
-        else if (!Double.isNaN(value = binaryToValue(input)))
+        catch (Throwable e)
         {
-            this.numBits = (input.length() - 2);
+            throw new NumberFormatException();
         }
-        else
-        {
-            assert false : "Invalid input: " + input;
-        }
-        
-        this.value = (int)value;
     } 
     /**
      * Binary(int input, int minNumBits)
@@ -77,7 +56,7 @@ public class Binary
     public Binary(Integer input, int minNumBits)
     {
         this("0b" + pad(Integer.toBinaryString(input), minNumBits));
-    } ;
+    }
     /**
      * Binary(int input)
      * 
@@ -90,73 +69,35 @@ public class Binary
     public Binary(Integer input)
     {
         this("0b" + Integer.toBinaryString(input));
-    }
-    
+    }    
     public Binary()
     {
-        this.value = 0;
-        this.numBits = 0;
+        this.value = "";
     }
     
     // ***********************************Static methods**********************************
+     
+    /**
+     * stringToBinaryString(String in, int base)
+     * 
+     * Convert a string into the binary representation of it.
+     * PRECONDITION: base is an integer power of 2.
+     *      
+     * @param   String   the string to convert
+     * @param   int      the base of the input
+     * @return  String   a binary representation of the input
+     *      
+     */
+    public static String stringToBinaryString(String in, int base)
+    {
+        String binary = "";
+        for (int i = 0; i < in.length(); i++)
+        {
+            binary = binary + pad(Integer.toBinaryString(Integer.parseInt(in.substring(i, i + 1), base)), (int)(Math.log(base)/Math.log(2)));
+        }
+        return binary;
+    }
     
-    /**
-     * hexToValue(String s)
-     * 
-     * valid format for s: "0x{0-F}"
-     * 
-     * @param The string representation of a hex value
-     * @return the double value contained in the string
-     *         Double.NaN if the hex string is not correctly formatted.
-     */
-    static public double hexToValue(String s)
-    {
-        if (!s.substring(0, 2).equalsIgnoreCase("0x"))
-        {
-            return Double.NaN;
-        }
-        int value = 0;
-        try
-        {
-            for (int i = 2; i < s.length(); i++)
-            {
-                value += hexConverter.get(s.substring(i,i+1).toUpperCase()) * Math.pow(16,s.length() - i - 1);
-            }
-        }
-        catch (Throwable e)
-        {
-            return Double.NaN;
-        }
-        return value;
-    }
-    /**
-     * binaryToValue(String s)
-     * 
-     * valid format for s: "0b{0-1}"
-     * 
-     * @param The string representation of a binary value
-     * @return the double value contained in the string
-     *         Double.NaN if the binary string is not correctly formatted.
-     */
-    public static double binaryToValue(String s)
-    {
-        if (!s.substring(0, 2).equalsIgnoreCase("0b"))
-        {
-            return Double.NaN;
-        }
-        int value = 0;
-        for (int i = 2; i < s.length(); i++)
-        {
-            int bit = Integer.parseInt(s.substring(i, i + 1));
-            if (bit > 1 || bit < 0)
-            {
-                return Double.NaN;
-            }
-            value += bit * Math.pow(2, s.length() - i - 1);
-        }
-        return value;
-    }
-        
     /**
      * pad(String s, int numChars)
      * 
@@ -193,15 +134,10 @@ public class Binary
      */
     public void concatBack(Binary... args)
     {
-        String newValue = this.toBinaryString();
-        int bitsToAdd = 0;
         for (Binary b : args)
         {
-            newValue = newValue + b.toBinaryString();
-            bitsToAdd += b.numBits;
+            this.value = this.value + b.value;
         }
-        this.value = (int)binaryToValue("0b" + newValue);
-        this.numBits += bitsToAdd;
     }
     
     /**
@@ -219,16 +155,10 @@ public class Binary
      */
     public void concatFront(Binary... args)
     {
-        String newValue = this.toBinaryString();
-        int bitsToAdd = 0;
-        for (int i = args.length - 1; i >= 0; i--)
+        for (Binary b : args)
         {
-            Binary b = args[i];
-            newValue = b.toBinaryString() + newValue;
-            bitsToAdd += b.numBits;
+            this.value = b.value + this.value;
         }
-        this.value = (int)binaryToValue("0b" + newValue);
-        this.numBits += bitsToAdd;
     }
     
     /**
@@ -239,18 +169,58 @@ public class Binary
      * @param   Binary(s)  The binary objects to add.
      */
     public void add(Binary... args)
-    {
+    {        
         for (Binary b : args)
         {
-            this.value += b.getValue();
-            if (b.numBits > this.numBits)
-            {
-                this.numBits = b.numBits;
-            }   
+            this.value = add(this.value, b.value, "0");
         }
-        if (this.minNumBits() > this.numBits)
+    }    
+    private static String add(String b0, String b1, String c)
+    {
+        if (b0.length() == 0)
         {
-            this.numBits = this.minNumBits();
+            return b1;
+        }
+        if (b1.length() == 0)
+        {
+            return b0;
+        }
+        
+        String lsb0 = b0.substring(b1.length() - 1);
+        String lsb1 = b1.substring(b1.length() - 1);
+        
+        if (lsb0.equals("1") && lsb1.equals("1"))
+        {
+            if (c.equals("1"))
+            {
+                return add(b0.substring(0, b0.length() - 1), b1.substring(0, b1.length() - 1), "1") + "1";
+            }
+            else
+            {
+                return add(b0.substring(0, b0.length() - 1), b1.substring(0, b1.length() - 1), "1") + "0";
+            }
+        }
+        else if (lsb0.equals("1") || lsb1.equals("1"))
+        {
+            if (c.equals("1"))
+            {
+                return add(b0.substring(0, b0.length() - 1), b1.substring(0, b1.length() - 1), "1") + "0";
+            }
+            else
+            {
+                return add(b0.substring(0, b0.length() - 1), b1.substring(0, b1.length() - 1), "0") + "1";
+            }
+        }
+        else
+        {
+            if (c.equals("1"))
+            {
+                return add(b0.substring(0, b0.length() - 1), b1.substring(0, b1.length() - 1), "0") + "1";
+            }
+            else
+            {
+                return add(b0.substring(0, b0.length() - 1), b1.substring(0, b1.length() - 1), "0") + "0";
+            }
         }
     }
     
@@ -263,8 +233,7 @@ public class Binary
      */
     public Binary leastSignificantByte()
     {
-        String hex = this.toString();
-        return new Binary("0x" + hex.substring(hex.length() - 1));
+        return new Binary("0b" + this.value.substring(this.value.length() - 4));
     }
     
     /**
@@ -278,7 +247,26 @@ public class Binary
      */
     public Binary twoComp()
     {
-        return new Binary((int)Math.pow(2, this.minNumBits()) - this.value);
+        char[] c = this.value.toCharArray();
+        int i = c.length - 1;
+        while (c[i] == '0')
+        {
+            i--;
+        }
+        i--;
+        while (i >= 0)
+        {
+            if (c[i] == '0')
+            {
+                c[i] = '1';
+            }
+            else
+            {
+                c[i] = '0';
+            }
+            i--;
+        }
+        return new Binary("0b" + String.valueOf(c));
     }
     
     /**
@@ -290,20 +278,18 @@ public class Binary
      */
     public String toString()
     {
-        return pad(Integer.toHexString(this.value).toUpperCase(), (int)Math.ceil((this.numBits) / 4.0));
+        String bin = pad(this.value, (int)Math.ceil(this.value.length() / 4.0) * 4);
+        String hex = "";
+        for (int i = 0; i <= bin.length() - 4; i += 4)
+        {
+            hex = hex + Integer.toHexString(Integer.parseInt(bin.substring(i, i + 4), 2));
+        }
+        return hex.toUpperCase();
     }
-    
-    /**
-     * toBinaryString()
-     * 
-     * Returns this as a string formatted in binary.
-     * 
-     * @return  String  the binary representation of this.
-     */
     public String toBinaryString()
     {
-        return pad(Integer.toBinaryString(this.value), this.numBits);
-    }
+        return this.value; 
+    }   
     
     /**
      * split(int start, int end)
@@ -314,7 +300,7 @@ public class Binary
      */
     public Binary split(int start, int end)
     {
-        return new Binary("0b" + this.toBinaryString().substring(start, end));
+        return new Binary("0b" + this.value.substring(start, end));
     }
     /**
      * split(int start)
@@ -325,7 +311,7 @@ public class Binary
      */
     public Binary split(int start)
     {
-        return new Binary("0b" + this.toBinaryString().substring(start));
+        return new Binary("0b" + this.value.substring(start));
     }
     
     /**
@@ -337,16 +323,16 @@ public class Binary
      */
     public int minNumBits()
     {
-        return Integer.toBinaryString(this.value).length();
-    }
-    
-    // Public getter methods
-    public int getValue()
-    {
-        return this.value;
+        return this.value.length() - this.value.indexOf("1");
     }
     public int getNumBits()
     {
-        return this.numBits;
+        return this.value.length();
+    }    
+    
+    // Public getter methods
+    public String getValue()
+    {
+        return this.value;
     }
 }

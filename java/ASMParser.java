@@ -161,25 +161,20 @@ public class ASMParser
     {
         Iterator<Binary> it = instructions.iterator();
         
-        List<Binary> out = new ArrayList();
-        
-        Binary curLine;
+        List<Binary> out = new ArrayList();       
         
         while (it.hasNext())
         {
-            curLine = new Binary("0x0");
+            Binary curLine = new Binary();
             for(int i = 0; it.hasNext() && i < wordsPerLine; i++)
             {
-                Binary c = it.next();
-                System.out.println("    " + c);
-                
-                curLine.concatBack(c);
+                curLine.concatBack(it.next());
+                System.out.println("    " + curLine);
             }
             out.add(curLine);
         }
         
         return out;
-            
     }
     
     private List<Binary> separateInstructions(List<Binary> instructions)
