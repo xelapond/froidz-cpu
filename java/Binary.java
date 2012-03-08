@@ -5,7 +5,7 @@ import java.util.Iterator;
  * Represents a binary number using a String and performs operations on it.
  * 
  * @author Jacob Weiss
- * @version 0.0.5
+ * @version 0.0.6
  */
 public class Binary
 {   
@@ -179,14 +179,38 @@ public class Binary
     {
         if (b0.length() == 0)
         {
-            return b1;
+            if (c.equals("0"))
+            {
+                return b1;
+            }
+            else if (b1.length() == 0)
+            {
+                return "1";
+            }
+            else
+            {
+                b0 = "1";
+                c = "0";
+            }
         }
-        if (b1.length() == 0)
+        else if (b1.length() == 0)
         {
-            return b0;
+            if (c.equals("0"))
+            {
+                return b0;
+            }
+            else if (b0.length() == 0)
+            {
+                return "1";
+            }
+            else
+            {
+                b1 = "1";
+                c = "0";
+            }
         }
         
-        String lsb0 = b0.substring(b1.length() - 1);
+        String lsb0 = b0.substring(b0.length() - 1);
         String lsb1 = b1.substring(b1.length() - 1);
         
         if (lsb0.equals("1") && lsb1.equals("1"))
