@@ -36,8 +36,7 @@ public class Binary
     {
         try
         {
-            int base = bases.get(input.substring(0, 2));
-            this.value = stringToBinaryString(input.substring(2), base);
+            this.value = stringToBinaryString(input.substring(2), bases.get(input.substring(0, 2)));
         }
         catch (Throwable e)
         {
@@ -90,10 +89,15 @@ public class Binary
      */
     public static String stringToBinaryString(String in, int base)
     {
+        double baseConvert = Math.log(base)/Math.log(2);
+        if (base != (int)base)
+        {
+            throw new java.lang.NumberFormatException();
+        }
         String binary = "";
         for (int i = 0; i < in.length(); i++)
         {
-            binary = binary + pad(Integer.toBinaryString(Integer.parseInt(in.substring(i, i + 1), base)), (int)(Math.log(base)/Math.log(2)));
+            binary = binary + pad(Integer.toBinaryString(Integer.parseInt(in.substring(i, i + 1), base)), (int)baseConvert);
         }
         return binary;
     }
@@ -264,7 +268,7 @@ public class Binary
      * twoComp()
      * 
      * Returns the two's complement of this. 
-     * The length of the value returned is equal to the shortest number of bits
+     * The length of the value returned is equal to the length of this.
      * that this can be represented in. Leading 0s are ignored.
      * 
      * @return  Binary  the two's complement of this
@@ -354,9 +358,8 @@ public class Binary
         return this.value.length();
     }    
     
-    // Public getter methods
-    public String getValue()
+    public int getValue()
     {
-        return this.value;
+        return Integer.parseInt(this.value, 2);
     }
 }
