@@ -79,7 +79,7 @@ public class ASMParser
         
         for (Object o : insts)
         {
-            System.out.print(o);
+            System.out.println(o);
         }
         System.out.println();
         
@@ -88,10 +88,12 @@ public class ASMParser
         
         for (Object o : insts)
         {
-            System.out.print(o);
+            System.out.println(o);
         }
         System.out.println();
         System.out.println("ASSEMBLY DONE");
+        
+        generateChecksums(insts);
         
         
         //this.generateInstructions(this.preprocess(this.format(lines)));
@@ -139,7 +141,6 @@ public class ASMParser
         
         for (List<String> parsed : lines)
         {
-            //List<String> parsed = this.parseLine(line);
             
             WPChunk op = this.parser.getChunk(parsed.get(0));
             
@@ -165,11 +166,10 @@ public class ASMParser
         
         while (it.hasNext())
         {
-            Binary curLine = new Binary();
-            for(int i = 0; it.hasNext() && i < wordsPerLine; i++)
+            Binary curLine = it.next();
+            for(int i = 1; it.hasNext() && i < wordsPerLine; i++)
             {
                 curLine.concatBack(it.next());
-                System.out.println("    " + curLine);
             }
             out.add(curLine);
         }
@@ -188,7 +188,9 @@ public class ASMParser
         
         for (Binary line : lines)
         {
-            Binary byteCount = new Binary("0b" + Integer.toBinaryString(line.minNumBits()));
+            System.out.println(line + " " + line.getNumBits());
+            Binary byteCount = new Binary("0b" + (Integer.toBinaryString(line.getNumBits() / 8)));
+            line.concatFront(ASMParser.DATA_RECORD);
             line.concatFront(addr);
             line.concatFront(byteCount);
             addr.add(byteCount);
@@ -197,11 +199,11 @@ public class ASMParser
 
     }
     
-    private void generateCheckSums(List<Binary> lines)
+    private void generateChecksums(List<Binary> lines)
     {
         for(Binary b : lines)
         {
-            b.concatFront(ASMParser.generateLineChecksum(b.toString()));
+            b.concatFront(ASMParser.generateLineChecksum(b));
         }
     }
     
@@ -255,13 +257,17 @@ public class ASMParser
         return bins;
     }
     
-    public static Binary generateLineChecksum(String line)
+    public static Binary generateLineChecksum(Binary line)
     {
-        return new Binary("0x00");
+        Binary count = line.slice(0, 2);
+        Binary addr = line.slice(2, 5);
+        Binary type = line.slice(5, 8);
+        Binary data = line.slice(8);
+        
+        System.out.println(count + " " + addr + " " + type + " " + data);
+        
+        return count;
     }
-   
-    
-
     
     public void test()
     {
