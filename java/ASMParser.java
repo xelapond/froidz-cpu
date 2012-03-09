@@ -79,7 +79,7 @@ public class ASMParser
         
         for (Object o : insts)
         {
-            System.out.print(o);
+            System.out.println(o);
         }
         System.out.println();
         
@@ -88,7 +88,7 @@ public class ASMParser
         
         for (Object o : insts)
         {
-            System.out.print(o);
+            System.out.println(o);
         }
         System.out.println();
         System.out.println("ASSEMBLY DONE");
@@ -139,7 +139,6 @@ public class ASMParser
         
         for (List<String> parsed : lines)
         {
-            //List<String> parsed = this.parseLine(line);
             
             WPChunk op = this.parser.getChunk(parsed.get(0));
             
@@ -165,11 +164,10 @@ public class ASMParser
         
         while (it.hasNext())
         {
-            Binary curLine = new Binary();
+            Binary curLine = it.next();
             for(int i = 0; it.hasNext() && i < wordsPerLine; i++)
             {
                 curLine.concatBack(it.next());
-                System.out.println("    " + curLine);
             }
             out.add(curLine);
         }
@@ -188,10 +186,12 @@ public class ASMParser
         
         for (Binary line : lines)
         {
-            Binary byteCount = new Binary("0b" + Integer.toBinaryString(line.minNumBits()));
+            System.out.println(line + " " + line.getNumBits());
+            Binary byteCount = new Binary("0b" + (Integer.toBinaryString(line.getNumBits() / 8)));
             line.concatFront(addr);
             line.concatFront(byteCount);
             addr.add(byteCount);
+            System.out.println(byteCount + "bytes");
         }
         
 
