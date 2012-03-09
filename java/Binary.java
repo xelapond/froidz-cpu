@@ -322,7 +322,7 @@ public class Binary
      * 
      * @return  Binary  the selected part of this
      */
-    public Binary split(int start, int end)
+    public Binary slice(int start, int end)
     {
         return new Binary("0b" + this.value.substring(start, end));
     }
@@ -333,7 +333,7 @@ public class Binary
      * 
      * @return  Binary  the selected part of this
      */
-    public Binary split(int start)
+    public Binary slice(int start)
     {
         return new Binary("0b" + this.value.substring(start));
     }
