@@ -259,10 +259,10 @@ public class ASMParser
     
     public static Binary generateLineChecksum(Binary line)
     {
-        Binary count = line.slice(0, 2);
-        Binary addr = line.slice(2, 5);
-        Binary type = line.slice(5, 8);
-        Binary data = line.slice(8);
+        Binary count = line.slice(0, 9);
+        Binary addr = line.slice(9, 25);
+        Binary type = line.slice(25, 34);
+        Binary data = line.slice(34);
         
         System.out.println(count + " " + addr + " " + type + " " + data);
         
