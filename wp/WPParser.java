@@ -21,7 +21,7 @@ public class WPParser
 
     public WPParser()
     {
-        this("../avrassembly.wp");
+        this("../dev/avrassembly.wp");
     }
     
     public WPParser(String path)
