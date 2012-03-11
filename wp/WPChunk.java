@@ -24,8 +24,8 @@ public class WPChunk
         line = line.replace(" ", "");
         String[] parts = line.split("\\|");
         this.opName = parts[0];
-        this.operands = parts[1].split(",");
-        this.ranges = parts[2].split(",");
+        this.operands = parts[1].split(":");
+        this.ranges = parts[2].split(":");
         this.opCode = parts[3];
         
         this.opCodePattern = Pattern.compile(this.formatRegex(this.opCode));
