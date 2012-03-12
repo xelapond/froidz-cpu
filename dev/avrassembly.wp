@@ -1,6 +1,6 @@
 # Format of AVR Assembly Code
 #
-# {syntax}|{colon-separated, pattern-matched operands}|{colon-separated operand range}x{number of operands}|{16 bit opcode}
+# {syntax}|{colon-separated, pattern-matched operands}|{colon-separated operand range}x{number of operands}|{16 bit opcode}|{Clock Cycles}
 #
 # Jacob Weiss
 
